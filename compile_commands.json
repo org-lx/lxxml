@@ -1,0 +1,36 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-DDEBUG",
+      "-Iinclude",
+      "-m64",
+      "-g",
+      "-std=c99",
+      "-c",
+      "-o",
+      "obj/Debug/lxxml/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/turdle/Projects/lx/lxxml",
+    "file": "/home/turdle/Projects/lx/lxxml/src/main.c",
+    "output": "/home/turdle/Projects/lx/lxxml/obj/Debug/lxxml/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-DDEBUG",
+      "-Iinclude",
+      "-m64",
+      "-g",
+      "-std=c99",
+      "-c",
+      "-o",
+      "obj/Debug/test-app/main.o",
+      "example/main.c"
+    ],
+    "directory": "/home/turdle/Projects/lx/lxxml",
+    "file": "/home/turdle/Projects/lx/lxxml/example/main.c",
+    "output": "/home/turdle/Projects/lx/lxxml/obj/Debug/test-app/main.o"
+  }
+]
