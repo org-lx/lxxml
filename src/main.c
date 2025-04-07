@@ -54,6 +54,35 @@ char* strndup(char *str, int chars) {
     return buffer;
 }
 
+char* xml_entity_decode(const char* input) {
+    size_t len = strlen(input);
+    char* result = malloc(len + 1);
+    size_t ri = 0;
+
+    for (size_t i = 0; i < len; ) {
+        if (input[i] == '&') {
+            if (strncmp(&input[i], "&lt;", 4) == 0) {
+                result[ri++] = '<'; i += 4;
+            } else if (strncmp(&input[i], "&gt;", 4) == 0) {
+                result[ri++] = '>'; i += 4;
+            } else if (strncmp(&input[i], "&amp;", 5) == 0) {
+                result[ri++] = '&'; i += 5;
+            } else if (strncmp(&input[i], "&apos;", 6) == 0) {
+                result[ri++] = '\''; i += 6;
+            } else if (strncmp(&input[i], "&quot;", 6) == 0) {
+                result[ri++] = '"'; i += 6;
+            } else {
+                result[ri++] = input[i++];
+            }
+        } else {
+            result[ri++] = input[i++];
+        }
+    }
+
+    result[ri] = '\0';
+    return result;
+}
+
 char* parse_tag_name(char* s, char** out_name) {
 	char* start = s;
 	while (*s && (*s != ' ' && *s != '>' && *s != '/')) s++;
@@ -146,14 +175,16 @@ char* lxml_parse_node(char* s, lxml_node** out_node) {
 				while (*s && *s != '<') s++;
 				int text_len = s - text_start;
 				if (text_len > 0) {
-					char* text = strndup(text_start, text_len);
+					char* raw_text = strndup(text_start, text_len);
+					char* text = xml_entity_decode(raw_text);
+					free(raw_text);
+					
 					if (node->text) {
 						char* old = node->text;
 						int old_len = strlen(old);
-						node->text = malloc(old_len + text_len + 1);
+						node->text = malloc(old_len + strlen(text) + 1);
 						memcpy(node->text, old, old_len);
-						memcpy(node->text + old_len, text, text_len);
-						node->text[old_len + text_len] = 0;
+						strcpy(node->text + old_len, text);
 						free(old);
 						free(text);
 					} else {
